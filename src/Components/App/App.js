@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from '../SearchBar/SearchBar'
 import SearchResults from '../SearchResults/SearchResults'
 import Playlist from '../Playlist/Playlist'
+import Spotify from '../../util/Spotify'
 import './App.css';
 
 class App extends React.Component {
@@ -15,7 +16,7 @@ class App extends React.Component {
     this.savePlaylist = this.savePlaylist.bind(this);
   }
   search(term) {
-    console.log(term) 
+    this.setState({searchResults: Spotify.search(term)})
   } 
   addTrack(track) {
     let playlistTracks = this.state.playlistTracks;
@@ -34,6 +35,7 @@ class App extends React.Component {
     this.setState({playlistName: name})
   }
   savePlaylist() {
+    Spotify.savePlaylist()
     const trackURIs = []
   }
   render() {
@@ -43,8 +45,8 @@ class App extends React.Component {
         <div className="App">
           <SearchBar onSearch={this.search} />
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack()}/>
-            <Playlist onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.state.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
+            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack}/>
+            <Playlist searchResults={this.state.searchResults} onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.state.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
           </div>
         </div>
       </div>      
