@@ -16,8 +16,8 @@ class App extends React.Component {
     this.savePlaylist = this.savePlaylist.bind(this);
   }
   search() {
-    
-  }
+
+  } 
   addTrack(track) {
     let playlistTracks = this.state.playlistTracks;
     if (!playlistTracks.includes(track)) {
