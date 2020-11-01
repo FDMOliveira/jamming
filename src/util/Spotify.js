@@ -1,20 +1,15 @@
-import Playlist from "../Components/Playlist/Playlist";
 
-let myID = "1b90001b050e43508958689b049fd9e4",
-    acessPoint = "http://localhost:3000/",
-    accessToken = "BQB7KS1BagJ4sC0IdTpc4Zp42tdTcmA_SPYn8Wd27MdgXBw7AkKyKALezgN099asLkCw8aeRwbHROjVPJiwv6rUenZHKldmYVyU1Os6BncaQYb3cRG6wB-8PIeAX2OpMdCeOiqsmmb0",
+let clientId = "77e94be7eb784d01801810018234bd19",
+    redirectUri = "http://localhost:3000/",
     secret = "e806d2b3ef104a60b3aabd57801306cd",
-    expiresIn = 3600;
+    expiresIn = 3600,
+    spotifyUrl = `https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`,
+    accessToken = undefined;    
 
-window.setTimeout(() => accessToken = '', expiresIn * 1000);
-window.history.pushState('Access Token', null, '/');
-
-class Spotify {
+module.exports = {
     search(term) {
         return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
+            headers: {Authorization: `Bearer ${accessToken}`}
         })
         .then(response => {
             if (response.ok)
@@ -22,10 +17,10 @@ class Spotify {
             throw new Error("Error")
         })
         .then(jsonResponse => {
-            if (!jsonResponse.length)
+            if (!jsonResponse)
                 return []
-                
-            let tracksArr = jsonResponse.map(track => {
+
+            return jsonResponse.tracks.items.map(track => {
                 return {
                     id: track.id,
                     name : track.name,
@@ -34,13 +29,12 @@ class Spotify {
                     url : track.url
                 }
             })
-            return tracksArr;
         })
-    }
+    }, 
     savePlaylist(playlistName, uriTracksArray) {
         if (!playlistName.length && !uriTracksArray.length)
             return
-            
+
         let headers = {
                 Authorization: `Bearer ${accessToken}`
             },
@@ -76,22 +70,21 @@ class Spotify {
                 playlistID = jsonResponse.id;
             })
         });
-    }
+    },
     getAccessToken() {
-        if (accessToken.length) 
+        if (accessToken) 
             return accessToken
+
+        const urlAccessToken = window.location.href.match(/access_token=([^&]*)/),
+            urlExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
+        if (urlAccessToken && urlExpiresIn) {
+            accessToken = urlAccessToken[1];
+            expiresIn = urlExpiresIn[1];
+            window.setTimeout(() => accessToken = '', expiresIn * 1000);
+            window.history.pushState('Access Token', null, '/');
+        } 
         else {
-            fetch(`https://accounts.spotify.com/authorize?client_id=${myID}&response_type=token&redirect_uri=${acessPoint}&state=2456718`).then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Request failed!');
-            }, error => {
-                console.log(error.message)
-            }).then(jsonResponse => {
-                console.log(jsonResponse)
-            }) 
+            window.location = spotifyUrl;
         }
     }
 }
-export default Spotify

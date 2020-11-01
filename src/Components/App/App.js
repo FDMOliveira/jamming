@@ -2,8 +2,10 @@ import React from 'react';
 import SearchBar from '../SearchBar/SearchBar'
 import SearchResults from '../SearchResults/SearchResults'
 import Playlist from '../Playlist/Playlist'
-import Spotify from '../../util/Spotify'
 import './App.css';
+const Spotify = require("../../util/Spotify");
+
+Spotify.getAccessToken();
 
 class App extends React.Component {
   constructor(props) {
@@ -14,9 +16,14 @@ class App extends React.Component {
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
-  }
+    this.search = this.search.bind(this)
+  } 
+
   search(term) {
-    this.setState({searchResults: Spotify.search(term)})
+    Spotify.search(term).then(searchResults => {
+      console.log(searchResults)
+      this.setState({searchResults: searchResults})
+    })
   } 
   addTrack(track) {
     let playlistTracks = this.state.playlistTracks;
@@ -24,19 +31,19 @@ class App extends React.Component {
       let newPlaylist = playlistTracks.push(track);
       this.setState({playlistTracks: newPlaylist})
     }
-  }
+  } 
   removeTrack(track) {
     this.state.playlistTracks.filter((song) => {
       if (track.id!==song.id) 
         return song 
     });
   }
-  updatePlaylistName(name) {
+  updatePlaylistName(name) { 
     this.setState({playlistName: name})
   }
   savePlaylist() {
     Spotify.savePlaylist()
-    const trackURIs = []
+    this.setState({playlistName: "Playlist", playlistTracks: [] })
   }
   render() {
     return ( 
