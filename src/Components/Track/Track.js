@@ -21,7 +21,7 @@ class Track extends React.Component {
             <h3>{this.props.name}</h3>
             <p>{this.props.artist} | {this.props.album}</p>
         </div>
-        <button className="Track-action" onClick={this.props.isRemoval ? this.addTrack : this.removeTrack}>{this.props.isRemoval ? "-" : "+"}</button>
+        <button className="Track-action" onClick={this.props.isRemoval ? this.removeTrack : this.addTrack}>{this.props.isRemoval ? "-" : "+"}</button>
     </div>
     );
   }

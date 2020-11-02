@@ -1,9 +1,9 @@
 
 let clientId = "77e94be7eb784d01801810018234bd19",
-    redirectUri = "http://localhost:3000/",
+    redirectUri = "http://Jamming_App.surge.sh",
     secret = "e806d2b3ef104a60b3aabd57801306cd",
     expiresIn = 3600,
-    spotifyUrl = `https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`,
+    spotifyUrl = `https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-private&client_id=${clientId}&redirect_uri=${redirectUri}`,
     accessToken = undefined;    
 
 module.exports = {
@@ -26,14 +26,16 @@ module.exports = {
                     name : track.name,
                     artist : track.artists[0].name,
                     album : track.album.name,
-                    url : track.url
+                    uri : track.uri
                 }
             })
         })
     }, 
     savePlaylist(playlistName, uriTracksArray) {
-        if (!playlistName.length && !uriTracksArray.length)
+        if (!playlistName && !uriTracksArray)
             return
+
+        this.getAccessToken();
 
         let headers = {
                 Authorization: `Bearer ${accessToken}`
@@ -41,35 +43,51 @@ module.exports = {
             playlistID = "",
             userID = "";
 
-        fetch("https://api.spotify.com/v1/me", headers)
+        fetch("https://api.spotify.com/v1/me", {
+            headers : headers
+        })
         .then(response => {
-            if (response.ok)
-                response.json();
+            if (response.ok) 
+                return response.json();
             throw new Error("Error")
         })
         .then(jsonResponse => {
-            userID = jsonResponse.id
+            return jsonResponse.id
         })
         .then(userID => {
             fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
                 headers : {
-                    Authorization: `Bearer ${accessToken}`,
+                    "Authorization": `Bearer ${accessToken}`,
                     "Content-Type" : `application/json` 
                 },
                 method: `POST`,
-                body: {
+                body: JSON.stringify({
                     name : playlistName
-                }
+                })
             })
             .then(response => {
-                if (response.ok)
+                if (response.ok) 
                     return response.json();
+
                 throw new Error("Erro")
             })
             .then(jsonResponse => {
                 playlistID = jsonResponse.id;
             })
-        });
+            .then(()=> {
+                fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
+                    headers : {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type" : `application/json` 
+                    },
+                    method: `POST`,
+                    body: JSON.stringify({
+                        uris : uriTracksArray
+                    })
+                })
+            });
+        })
+
     },
     getAccessToken() {
         if (accessToken) 
