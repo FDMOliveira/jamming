@@ -1,3 +1,10 @@
 .TrackList {
-    width: 100%;
+    display: flex;
+    margin: 0 -25px;
+    padding-right: 30px;
+    overflow: auto;
+}
+.TrackList > div {
+    padding: 0 25px;
+    width: 50%;
 }

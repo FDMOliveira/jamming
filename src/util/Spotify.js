@@ -1,8 +1,7 @@
 
 let clientId = "77e94be7eb784d01801810018234bd19",
-    redirectUri = "http://Jamming_App.surge.sh",
-    secret = "e806d2b3ef104a60b3aabd57801306cd",
-    expiresIn = 3600,
+    redirectUri = "http://localhost:3000",
+    expiresIn = 3600, 
     spotifyUrl = `https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-private&client_id=${clientId}&redirect_uri=${redirectUri}`,
     accessToken = undefined;    
 
@@ -26,7 +25,9 @@ module.exports = {
                     name : track.name,
                     artist : track.artists[0].name,
                     album : track.album.name,
-                    uri : track.uri
+                    uri : track.uri,
+                    song: track.href,
+                    preview: track.preview_url
                 }
             })
         })

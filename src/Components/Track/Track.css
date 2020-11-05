@@ -1,37 +1,62 @@
 .Track {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid rgba(256, 256, 256, 0.8);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgb(62 61 81);
+  padding: 35px 10px;
+  position: relative;
+}
+
+.Track-action {
+  cursor: pointer;
+  padding: .5rem;
+  font-size: 1.05rem;
+  transition: color .25s;
+  border: 0px;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff;
+}
+
+.Track-action:hover {
+  color: rgba(265, 265, 265, .5);
+}
+
+.Track-information {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 25px;
+}
+
+.Track-information h3 {
+  margin: 0;
+  font-family: 'Roboto';
+}
+
+.Track-information p {
+  font-size: .75rem;
+  font-weight: 300;
+  color: #cfbe26;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.Track audio {
+  display: none;
+} 
+.Track .Nr {
+  font-family: 'Roboto';
+}
+@media screen and (min-width:992px) {
+  .Track-Progression {
+    position: absolute;
+    top: 0;left: 0;right: 0;bottom: 0;
+    margin: auto;
+    width: 0;
   }
-  
-  .Track-action {
-    cursor: pointer;
-    padding: .5rem;
-    font-size: 1.05rem;
-    transition: color .25s;
-    border: 0px;
-    background-color: rgba(0, 0, 0, 0);
-    color: #fff;
+  .Track-Progression::after {
+    position: absolute;
+    top: 0;left: 0;right: 0;bottom: 0;
+    margin: auto;
+    background: linear-gradient(90deg, rgba(255,162,130,1) 0%, rgba(187,65,93,1) 100%);
   }
-  
-  .Track-action:hover {
-    color: rgba(265, 265, 265, .5);
-  }
-  
-  .Track-information {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 72px;
-  }
-  
-  .Track-information h3 {
-    margin-bottom: .22rem;
-  }
-  
-  .Track-information p {
-    font-size: .83rem;
-    font-weight: 300;
-    color: rgba(256, 256, 256, 0.8);
-  }
+}
