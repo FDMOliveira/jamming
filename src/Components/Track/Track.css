@@ -33,6 +33,12 @@
   font-family: 'Roboto';
 }
 
+.Track-information,
+.Track-information h3,
+.Track-information p {
+  pointer-events: none;
+}
+
 .Track-information p {
   font-size: .75rem;
   font-weight: 300;
@@ -46,17 +52,71 @@
 .Track .Nr {
   font-family: 'Roboto';
 }
+.Track > *:not(.Track-progression) {
+  position: relative;
+  z-index: 1;
+}
+.Track-play {
+  background: url('./play.svg') 0%/contain no-repeat;
+  outline: 0;
+  border: 0;
+  width: 10px;
+  height: 10px;
+  color: white;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.Track-progression.off,
+.Track .Progression-edges.off {
+  opacity: 0;
+  transition: all 0.1s ease; 
+}
 @media screen and (min-width:992px) {
-  .Track-Progression {
+  .Track-progression {
     position: absolute;
-    top: 0;left: 0;right: 0;bottom: 0;
+    top: 0;left: 0;
     margin: auto;
     width: 0;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    transition: all 1s linear;
   }
-  .Track-Progression::after {
+  .Track .Progression-edges {
     position: absolute;
-    top: 0;left: 0;right: 0;bottom: 0;
+    height: 100%;
+    transition: all 1s linear;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-right: 1px solid #d03c3a;
+    box-shadow: 4px 0px 6px #d03c3a6e;
+  }
+  .Track .Progression-edges::before,
+  .Track .Progression-edges::after {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    content: '';
+    right: 0;
+    background: #d03c3a;
+    border-radius: 100%;
+    right: -3px;
+    box-shadow: 1px 2px 14px 3px #d03c3a9e;
+  }
+  .Progression-edges::after {
+    bottom: 1px;
+  }
+  .Progression-edges::before {
+    top: -1px;
+  }
+  .Track-progression::after {
+    position: absolute;
+    top: 0;left: 0;
     margin: auto;
     background: linear-gradient(90deg, rgba(255,162,130,1) 0%, rgba(187,65,93,1) 100%);
+    content: '';
+    height: 100%;
+    width: calc((60vw/2) - 40px);
   }
 }

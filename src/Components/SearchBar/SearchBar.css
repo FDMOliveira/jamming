@@ -1,42 +1,49 @@
 .SearchBar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 0 0 0;
-    margin-bottom: 6.33rem;
-    border-bottom: 1px solid #383754;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0 0 0;
+  margin-bottom: 6.33rem;
+  border-bottom: 1px solid #383754;
+}
   
-  .SearchBar input {
+.SearchBar input {
+  width: 0;
+  padding: 20px 0;
+  border-radius: 3px;
+  color: #010c3f;
+  text-align: center;
+  font-size: 1rem;
+  background: transparent;
+  border: 0;
+  color: white; 
+  animation: witdh 2.5s steps(30, start) forwards;
+}
+  
+.SearchBar input:focus {
+  outline: none;
+}
+
+.SearchButton {
+  cursor: pointer;
+  width: 8.11rem;
+  padding: .77rem 0;
+  border-radius: 54px;
+  background-color: #010c3f;
+  text-align: center;
+  font-size: .833rem;
+  transition: background-color .25s;
+  border: 0px;
+  color: #fff;
+  font-weight: 500;
+}
+  
+.SearchButton:hover {
+  background-color: rgba(108, 65, 233, .7);
+}
+
+@keyframes witdh {
+  100% {
     width: 287px;
-    padding: 20px 0;
-    border-radius: 3px;
-    color: #010c3f;
-    text-align: center;
-    font-size: 1rem;
-    background: transparent;
-    border: 0;
-    color: white;
   }
-  
-  .SearchBar input:focus {
-    outline: none;
-  }
-  
-  .SearchButton {
-    cursor: pointer;
-    width: 8.11rem;
-    padding: .77rem 0;
-    border-radius: 54px;
-    background-color: #010c3f;
-    text-align: center;
-    font-size: .833rem;
-    transition: background-color .25s;
-    border: 0px;
-    color: #fff;
-    font-weight: 500;
-  }
-  
-  .SearchButton:hover {
-    background-color: rgba(108, 65, 233, .7);
-  }
+}

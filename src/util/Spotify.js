@@ -15,18 +15,18 @@ module.exports = {
                 return response.json();
             throw new Error("Error")
         })
-        .then(jsonResponse => {
-            if (!jsonResponse)
+        .then(tracksObj => {
+            if (!tracksObj)
                 return []
 
-            return jsonResponse.tracks.items.map(track => {
+            return tracksObj.tracks.items.map(track => {
                 return {
                     id: track.id,
                     name : track.name,
                     artist : track.artists[0].name,
                     album : track.album.name,
                     uri : track.uri,
-                    song: track.href,
+                    image : track.album.images[0].url,
                     preview: track.preview_url
                 }
             })
