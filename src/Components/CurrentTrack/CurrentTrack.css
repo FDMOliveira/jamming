@@ -1,0 +1,16 @@
+.Current-Track {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding-top: 70px;
+}
+.Album-image {
+    border-radius: 100%;
+    overflow: hidden;
+    width: 100%;
+    max-width: 270px;
+    max-height: 270px;
+}
+.Album-image img {
+    width: 100%;
+}

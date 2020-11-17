@@ -11,14 +11,14 @@ Spotify.getAccessToken();
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchResults: [], playlistName: "Playlist", playlistTracks:[], currentTrackImg: "" }
+    this.state = {searchResults: [], playlistName: "Playlist", playlistTracks:[], currentTrack: "", currentTrackImg: "", playing : false }
     
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
-    this.changeImage = this.changeImage.bind(this);
+    this.updateAudio = this.updateAudio.bind(this);
   }  
  
   search(term) {
@@ -48,8 +48,8 @@ class App extends React.Component {
     Spotify.savePlaylist("Dynamic Playlist", uris)
     this.setState({playlistName: "Playlist", playlistTracks: [] })
   }
-  changeImage(image) {
-    this.setState({currentTrackImg: image});
+  updateAudio(image) {
+    this.setState({currentTrackImg: image, playing: true});
   }
   render() {
     return ( 
@@ -58,7 +58,7 @@ class App extends React.Component {
           <SearchBar onSearch={this.search} />
           <div className="App-playlist">
             <CurrentTrack albumImage={this.state.currentTrackImg}/>
-            <SearchResults changeImage={this.changeImage} searchResults={this.state.searchResults} onAdd={this.addTrack}/>
+            <SearchResults currentTrack={this.state.currentTrack} playing={this.state.playing} updateAudio={this.updateAudio} searchResults={this.state.searchResults} onAdd={this.addTrack}/>
             {/* <Playlist onAdd={this.addTrack} searchResults={this.state.searchResults} onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} /> */}
           </div>
         </div> 

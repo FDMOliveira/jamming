@@ -7,11 +7,14 @@ class Track extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {progression:0, percentPayed :0}
+    this.state = {progression:0, percentPayed :0, volume:0}
+
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
-    this.playMusic = this.playMusic.bind(this);
+    this.play = this.play.bind(this);
     this.playProgression = this.playProgression.bind(this);
+    this.fadeIn = this.fadeIn.bind(this);
+    this.fadeOut = this.fadeOut.bind(this);
   }
   addTrack() {
     this.props.onAdd(this.props.track)
@@ -19,20 +22,54 @@ class Track extends React.Component {
   removeTrack() {
     this.props.onRemove(this.props.track);
   }
-  playMusic(e) {
+  fadeOut(audio, volume) {
+    if (volume > 0)
+        volume -= 0.1;
+    else {
+      volume = 0;
+      clearInterval(this.fadeOutTimer);
+    }
+    console.log(volume)
+    this.setState({volume: volume})
+    audio.volume = this.state.volume;
+  }
+  fadeIn(audio, volume) {
+    if (volume < 0.9)
+        volume+=0.1;
+    else {
+      volume = 1;
+      clearInterval(this.fadeInTimer);
+    }
+    this.setState({volume: volume})
+    audio.volume = this.state.volume;
+  }
+  play(e) {
     const currentNode = e.target,
           parentNode = currentNode.parentElement,
-          targetAudio = parentNode.childNodes[0];
-    
-    targetAudio.load();
-    targetAudio.play();
-    
-    this.setState({currentAudio: targetAudio})
-    this.timer = setInterval(this.playProgression, 1000);
-    this.props.changeImage(this.props.image)
+          audio = parentNode.childNodes[0];
 
-    targetAudio.onended = () => {
-      let parent = targetAudio.parentElement,
+    if (this.props.playing) {
+        this.setState({volume: 1});
+        console.log(this.state.volume)
+        this.fadeOut(this.props.currentTrack, this.state.volume)
+    }
+        
+
+    audio.load();
+    audio.addEventListener('canplaythrough', () => { 
+      audio.volume = this.state.volume;
+      audio.play();
+      this.props.updateAudio(this.props.image, audio, true)
+
+      this.fadeInTimer = setInterval(()=> {
+        this.fadeIn(audio, this.state.volume);
+      }, 400);
+    }, false);
+
+    this.timer = setInterval(this.playProgression, 1000);
+
+    audio.onended = () => {
+      let parent = audio.parentElement,
           progressionLines = parent.childNodes[1],
           progressionDiv = parent.childNodes[2];
 
@@ -40,7 +77,8 @@ class Track extends React.Component {
       progressionLines.classList.add('off');
 
       setTimeout(() => {
-        this.setState({percentPayed: 0, progression : 0})
+        this.props.updateAudio("", false)
+        this.setState({currentAudio:"", percentPayed: 0, progression : 0, volume: 0, playing: false})
         clearInterval(this.timer);
       }, 400);
     };
@@ -57,7 +95,7 @@ class Track extends React.Component {
         <audio> 
           <source src={this.props.track.preview} type="audio/mp3"></source>
         </audio>
-        <div className="Progression-edges" style={{width: `${this.state.percentPayed}%`, opacity: `${this.state.percentPayed>0 ? 1 : 0}` }}></div>
+        <div className="Progression-edges" style={{width: `${this.state.percentPayed}%`, opacity: `${this.state.percentPayed > 0 ? 1 : 0}` }}></div>
         <div className="Track-progression" style={{width: `${this.state.percentPayed}%` }}></div>
         <div className="Nr">
           {this.props.nr}
@@ -66,7 +104,7 @@ class Track extends React.Component {
           <h3>{this.props.name}</h3>
           <p>{this.props.artist} | {this.props.album}</p>
         </div>
-        <button className="Track-play" onClick={this.playMusic}>
+        <button className="Track-play" onClick={this.play}>
         </button>
         <button className="Track-action" onClick={this.props.isRemoval ? this.removeTrack : this.addTrack}>{this.props.isRemoval ? "-" : "+"}</button>
     </div>
