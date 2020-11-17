@@ -48,8 +48,8 @@ class App extends React.Component {
     Spotify.savePlaylist("Dynamic Playlist", uris)
     this.setState({playlistName: "Playlist", playlistTracks: [] })
   }
-  updateAudio(image) {
-    this.setState({currentTrackImg: image, playing: true});
+  updateAudio(track, image, play) {
+    this.setState({currentTrack: track, currentTrackImg: image, playing: play});
   }
   render() {
     return ( 
