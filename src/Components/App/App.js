@@ -11,7 +11,7 @@ Spotify.getAccessToken();
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchResults: [], playlistName: "Playlist", playlistTracks:[], currentTrack: "", currentTrackImg: "", playing : false }
+    this.state = {searchResults: [], playlistName: "Playlist", playlistTracks:[], currentTrack: "", lastTrack: "", currentTrackImg: "", playing : false }
     
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -49,7 +49,8 @@ class App extends React.Component {
     this.setState({playlistName: "Playlist", playlistTracks: [] })
   }
   updateAudio(track, image, play) {
-    this.setState({currentTrack: track, currentTrackImg: image, playing: play});
+    let lastTrack = this.state.currentTrack !== "" ? this.state.currentTrack : track;  
+    this.setState({lastTrack: lastTrack, currentTrack: track, currentTrackImg: image, playing: play});
   }
   render() {
     return ( 
@@ -57,8 +58,8 @@ class App extends React.Component {
         <div className="App">
           <SearchBar onSearch={this.search} />
           <div className="App-playlist">
-            <CurrentTrack albumImage={this.state.currentTrackImg}/>
-            <SearchResults currentTrack={this.state.currentTrack} playing={this.state.playing} updateAudio={this.updateAudio} searchResults={this.state.searchResults} onAdd={this.addTrack}/>
+            <CurrentTrack playing={this.state.playing} albumImage={this.state.currentTrackImg}/>
+            <SearchResults lastTrack={this.state.lastTrack} currentTrack={this.state.currentTrack} playing={this.state.playing} updateAudio={this.updateAudio} searchResults={this.state.searchResults} onAdd={this.addTrack}/>
             {/* <Playlist onAdd={this.addTrack} searchResults={this.state.searchResults} onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} /> */}
           </div>
         </div> 

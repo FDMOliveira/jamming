@@ -6,7 +6,9 @@ class CurrentTrack extends React.Component {
         return (
             <div className="Current-Track">
                 <div className="Album-image" >
-                    <img src={this.props.albumImage}/>
+                    <div className={`Image ${!this.props.playing ? 'hidden' : ''}`}>
+                        <img src={this.props.albumImage}/>
+                    </div>
                 </div>
                 <div className="Navigation-Menu">
                 </div>
